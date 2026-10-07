@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ProjectSem3.Api/ProjectSem3.Api.csproj" />
+    <Project Path="src/ProjectSem3.Application/ProjectSem3.Application.csproj" />
+    <Project Path="src/ProjectSem3.Domain/ProjectSem3.Domain.csproj" />
+    <Project Path="src/ProjectSem3.Infrastructure/ProjectSem3.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ProjectSem3.IntegrationTests/ProjectSem3.IntegrationTests.csproj" />
+    <Project Path="tests/ProjectSem3.UnitTests/ProjectSem3.UnitTests.csproj" />
+  </Folder>
+</Solution>

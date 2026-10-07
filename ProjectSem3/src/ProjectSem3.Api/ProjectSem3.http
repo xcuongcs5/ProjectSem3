@@ -1,0 +1,38 @@
+@ProjectSem3_HostAddress = https://localhost:7274
+@accessToken = paste-access-token-here
+
+### Liveness
+GET {{ProjectSem3_HostAddress}}/health/live
+
+### Readiness (includes SQL Server)
+GET {{ProjectSem3_HostAddress}}/health/ready
+
+### Register
+POST {{ProjectSem3_HostAddress}}/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "userName": "student",
+  "password": "StrongPass!123"
+}
+
+### Login (the client keeps the Set-Cookie refresh token)
+POST {{ProjectSem3_HostAddress}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "emailOrUserName": "user@example.com",
+  "password": "StrongPass!123"
+}
+
+### Current user
+GET {{ProjectSem3_HostAddress}}/api/v1/auth/me
+Authorization: Bearer {{accessToken}}
+
+### Refresh access token
+POST {{ProjectSem3_HostAddress}}/api/v1/auth/refresh
+
+### Admin: list users
+GET {{ProjectSem3_HostAddress}}/api/v1/admin/users?page=1&pageSize=20
+Authorization: Bearer {{accessToken}}

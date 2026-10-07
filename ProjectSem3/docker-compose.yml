@@ -1,0 +1,67 @@
+x-api-environment: &api-environment
+  ASPNETCORE_ENVIRONMENT: Production
+  ASPNETCORE_HTTP_PORTS: 8080
+  AllowedHosts: ${ALLOWED_HOSTS}
+  ConnectionStrings__DefaultConnection: Server=sqlserver,1433;Database=ProjectSem3Db;User Id=sa;Password=${DB_PASSWORD};TrustServerCertificate=True
+  Jwt__SigningKey: ${JWT_SIGNING_KEY}
+  Identity__RequireConfirmedEmail: "true"
+  Email__Mode: Smtp
+  Email__Host: ${SMTP_HOST}
+  Email__Port: ${SMTP_PORT}
+  Email__EnableSsl: "true"
+  Email__UserName: ${SMTP_USERNAME}
+  Email__Password: ${SMTP_PASSWORD}
+  Email__FromEmail: ${SMTP_FROM_EMAIL}
+  Email__FrontendBaseUrl: ${FRONTEND_BASE_URL}
+  DataProtection__KeysPath: /var/keys
+  SeedAdmin__Email: ${SEED_ADMIN_EMAIL}
+  SeedAdmin__Password: ${SEED_ADMIN_PASSWORD}
+
+services:
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["dotnet", "ProjectSem3.Api.dll", "--migrate"]
+    environment: *api-environment
+    volumes:
+      - data-protection-keys:/var/keys
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment: *api-environment
+    ports:
+      - "8080:8080"
+    volumes:
+      - data-protection-keys:/var/keys
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P '$$MSSQL_SA_PASSWORD' -C -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    restart: unless-stopped
+
+volumes:
+  sqlserver-data:
+  data-protection-keys:

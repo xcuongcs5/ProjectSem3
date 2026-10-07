@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="ProjectSem3/src/ProjectSem3.Api/ProjectSem3.Api.csproj" />
+    <Project Path="ProjectSem3/src/ProjectSem3.Application/ProjectSem3.Application.csproj" />
+    <Project Path="ProjectSem3/src/ProjectSem3.Domain/ProjectSem3.Domain.csproj" />
+    <Project Path="ProjectSem3/src/ProjectSem3.Infrastructure/ProjectSem3.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="ProjectSem3/tests/ProjectSem3.UnitTests/ProjectSem3.UnitTests.csproj" />
+  </Folder>
+</Solution>
